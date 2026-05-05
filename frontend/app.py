@@ -336,11 +336,7 @@ if st.session_state["dev_view"]:
             st.metric("Confidence", result.get("confidence", "unknown"))
         with col_ml[1]:
             st.markdown("**How it is calculated**")
-            st.capsule("""
-The ML model (GradientBoostingRegressor) is trained on the Human Gut Microbiome Atlas (HGMA) — 6,014 samples × 1,990 species.
-It uses disease proxy labels (CRC, Adenoma, T2D, etc.) as the target variable. The longevity score (0–100) is a population-relative ranking:
-scores above 60 indicate a microbiome profile similar to healthy individuals in the HGMA dataset.
-            """)
+            st.info("See description in the adjacent panel.")
         st.markdown(f"**Model info:** `{result.get('data_version', '?')}`")
         st.caption("ML pipeline: normalize species vector → GradientBoostingRegressor → map to 0-100 scale")
 
@@ -355,12 +351,7 @@ scores above 60 indicate a microbiome profile similar to healthy individuals in 
             st.metric("Top Disease in Neighbors", knn.get("top_disease", "?"))
         with col_knn[1]:
             st.markdown("**How it is calculated**")
-            st.capsule("""
-Cosine similarity is computed between the input species vector and all 6,014 HGMA profiles.
-The K=7 nearest neighbors (by cosine similarity) are selected.
-Each neighbor carries a disease label. The healthy_match_ratio is the fraction of neighbors labeled 'Healthy'.
-Lower ratios indicate the input profile is more similar to diseased populations in HGMA.
-            """)
+            st.info("See description in the adjacent panel.")
         st.markdown("**Disease distribution of neighbors:**")
         dd = knn.get("disease_distribution", {})
         if dd:
@@ -381,11 +372,7 @@ Lower ratios indicate the input profile is more similar to diseased populations 
                 st.code(f"PMID {s.get('pmid')} — {s.get('journal', '?')} ({s.get('year', '?')})")
         with col_rag[1]:
             st.markdown("**How it works**")
-            st.capsule("""
-The query is embedded using all-MiniLM-L6-v2 and cosine-similarity searched against a ChromaDB
-collection of 327 PubMed abstracts covering microbiome-longevity-biomarker literature.
-Top-3 most similar abstracts are retrieved and injected as context into the Groq LLM prompt.
-            """)
+            st.info("See description in the adjacent panel.")
         st.markdown(f"**Retrieved answer:**\n\n{rag_data.get('answer', 'No answer')}")
         st.caption("RAG confidence: based on cosine similarity score of top-1 document (higher = more relevant context)")
 
@@ -399,15 +386,7 @@ Top-3 most similar abstracts are retrieved and injected as context into the Groq
             st.metric("Max Tokens", "1024")
         with col_llm[1]:
             st.markdown("**How inference works**")
-            st.capsule("""
-The LLM receives a structured prompt containing:
-1. The user's question
-2. ML longevity score + KNN summary as JSON
-3. Top-3 RAG abstracts with PMID citations
-
-The Groq model (llama-3.3-70b-versatile) generates a narrative response with citations.
-Temperature=0.3 keeps output focused and less hallucinatory.
-            """)
+            st.info("See description in the adjacent panel.")
         st.caption(f"LLM output reflects ML+RAG context only — it does not access external data beyond the RAG corpus of 327 PubMed articles.")
 
     # Raw JSON
