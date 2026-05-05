@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/root/longevity-microbiome
-Environment="GROQ_API_KEY="
+Environment="GROQ_API_KEY="  # set GROQ_API_KEY value on VPS
 Environment="PATH=/root/longevity-rag-venv/bin:/usr/local/bin:/usr/bin:/bin"
 ExecStart=/root/longevity-rag-venv/bin/python /root/longevity-microbiome/src/microbiome_api.py
 Restart=always
