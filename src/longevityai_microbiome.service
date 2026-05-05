@@ -1,0 +1,18 @@
+[Unit]
+Description=LongevityAI-Microbiome API (ML + KNN + RAG)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/longevity-microbiome
+Environment="GROQ_API_KEY="
+Environment="PATH=/root/longevity-rag-venv/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/root/longevity-rag-venv/bin/python /root/longevity-microbiome/src/microbiome_api.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
